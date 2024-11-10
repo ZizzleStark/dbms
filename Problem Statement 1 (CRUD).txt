@@ -1,0 +1,46 @@
+Problem Statement 1 :Create collection Student with fields as Roll_No, Name, Class, Marks, Address, Enrolled_Courses. (Hint: One student can enrol in multiple courses. Use Array to store the names of courses enrolled) Insert 10 documents in the collection Student. Write the queries for following. 
+
+// Use the database (or create it if it doesn't exist)
+use schoolDB;
+
+// Inserting 10 documents into the Student collection
+
+db.Student.insertMany([{Roll_No:"A01",Name:"John",Class:"SE",Marks:65,Address:"Pune",Enrolled_courses:["DBMS","Maths"]},]);
+
+db.Student.insertMany([{Roll_No:"A02",Name:"Radha",Class:"TE",Marks:85,Address:"Pimpri",Enrolled_courses:["DBMS","TOC"]},{Roll_No:"A03",Name:"Ram",Class:"TE",Marks:90,Address:"Talegaon",Enrolled_corses:["SPOS","TOC"]},{Roll_No:"A04",Name:"Pranali",Class:"SE",Marks:75,Address:"Dehu",Enrolled_courses:["DBMS","TOC"]}]);
+ isme aur daal lena 10 tk
+
+// Queries
+
+1.List the names of students who have enrolled in the course “DBMS”, “TOC”.                                     ^
+db.Student.find({Enrolled_courses:{$all:["DBMS","TOC"]}});
+
+
+// 2. List the Roll numbers and class of students who have marks more than 50 or class as TE.
+db.Student.find(
+    { $or: [{ Marks: { $gt: 50 } }, { Class: "TE" }] },
+    { Roll_No: 1, Class: 1, _id: 0 }
+);
+
+// 3. Update the entire record of roll number A10.
+db.Student.updateOne(
+    { Roll_No: "A10" },
+    {
+        $set: {
+            Name: "Isaac Newton",
+            Class: "BE",
+            Marks: 65,
+            Address: "707 New Spruce St",
+            Enrolled_Courses: ["Calculus", "Physics", "Mechanics"]
+        }
+    }
+);
+
+// 4. Display the names of students having 3rd and 4th highest marks.
+db.Student.find({},{Name:1,Marks:1,_id:0}).sort({Marks:-1}).skip(2).limit(2);
+
+// 5. Delete the records of students having marks less than 20.
+db.Student.deleteMany({ Marks: { $lt: 20 } });
+
+// 6. Delete only the first record from the collection.
+db.Student.deleteOne({});

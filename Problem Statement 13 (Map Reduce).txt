@@ -1,0 +1,47 @@
+Problem Statement 13 (Map Reduce)
+Create collection for Student{roll_no, name, class, dept, aggregate_marks}. Write Map Reduce Functions for
+following requirements.
+
+1. Finding the total marks of students of “TE” class department-wise.
+2. Finding the highest marks of students of “SE” class department-wise.
+3. Find Average marks of students of “BE” class department-wise.
+
+CREATE TABLE Student (
+    roll_no INT PRIMARY KEY,
+    name VARCHAR(50),
+    class VARCHAR(10),
+    dept VARCHAR(50),
+    aggregate_marks DECIMAL(5, 2)
+);
+
+INSERT INTO Student (roll_no, name, class, dept, aggregate_marks) VALUES
+(1, 'Aarav Sharma', 'TE', 'Computer', 78.50),
+(2, 'Vani Gupta', 'TE', 'Electronics', 84.75),
+(3, 'Rohan Deshmukh', 'TE', 'Computer', 90.00),
+(4, 'Meera Iyer', 'SE', 'Mechanical', 65.50),
+(5, 'Aman Kumar', 'SE', 'Electronics', 72.25),
+(6, 'Priya Menon', 'BE', 'Computer', 85.00),
+(7, 'Kunal Patil', 'BE', 'Mechanical', 78.25),
+(8, 'Nisha Nair', 'BE', 'Computer', 88.00),
+(9, 'Sanya Singh', 'TE', 'Mechanical', 70.50),
+(10, 'Ravi Chauhan', 'SE', 'Computer', 89.75),
+(11, 'Sneha Verma', 'BE', 'Electronics', 82.00),
+(12, 'Vikram Joshi', 'BE', 'Mechanical', 79.50),
+(13, 'Rahul Das', 'TE', 'Electronics', 92.00),
+(14, 'Ishita Pandey', 'SE', 'Computer', 91.25),
+(15, 'Neha Reddy', 'BE', 'Computer', 76.25);
+
+SELECT dept, SUM(aggregate_marks) AS total_marks
+FROM Student
+WHERE class = 'TE'
+GROUP BY dept;
+
+SELECT dept, MAX(aggregate_marks) AS highest_marks
+FROM Student
+WHERE class = 'SE'
+GROUP BY dept;
+
+SELECT dept, AVG(aggregate_marks) AS average_marks
+FROM Student
+WHERE class = 'BE'
+GROUP BY dept;
