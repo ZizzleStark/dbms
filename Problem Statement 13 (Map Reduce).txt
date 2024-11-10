@@ -45,3 +45,83 @@ SELECT dept, AVG(aggregate_marks) AS average_marks
 FROM Student
 WHERE class = 'BE'
 GROUP BY dept;
+
+
+
+
+
+
+
+
+
+
+
+
+//for mongodb map reduce
+
+
+
+
+// Map function for total marks of students in "TE" class, department-wise
+var mapFunction1 = function() {
+    if (this.class == "TE") {
+        emit(this.dept, this.aggregate_marks);
+    }
+};
+
+// Reduce function for total marks
+var reduceFunction1 = function(key, values) {
+    return Array.sum(values);  // Sum all marks for a department
+};
+
+// Run the MapReduce operation for total marks
+db.Student.mapReduce(
+    mapFunction1,
+    reduceFunction1,
+    { out: "total_marks_by_dept" }
+);
+
+// Map function for highest marks of students in "SE" class, department-wise
+var mapFunction2 = function() {
+    if (this.class == "SE") {
+        emit(this.dept, this.aggregate_marks);
+    }
+};
+
+// Reduce function for highest marks
+var reduceFunction2 = function(key, values) {
+    return Math.max.apply(null, values);  // Find the highest mark in the department
+};
+
+// Run the MapReduce operation for highest marks
+db.Student.mapReduce(
+    mapFunction2,
+    reduceFunction2,
+    { out: "highest_marks_by_dept" }
+);
+
+// Map function for average marks of students in "BE" class, department-wise
+var mapFunction3 = function() {
+    if (this.class == "BE") {
+        emit(this.dept, { totalMarks: this.aggregate_marks, count: 1 });
+    }
+};
+
+// Reduce function for average marks
+var reduceFunction3 = function(key, values) {
+    var result = { totalMarks: 0, count: 0 };
+    values.forEach(function(value) {
+        result.totalMarks += value.totalMarks;
+        result.count += value.count;
+    });
+    result.averageMarks = result.totalMarks / result.count;  // Calculate average
+    return result;
+};
+
+// Run the MapReduce operation for average marks
+db.Student.mapReduce(
+    mapFunction3,
+    reduceFunction3,
+    { out: "average_marks_by_dept" }
+);
+
